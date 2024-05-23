@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import Qs from 'querystring';
 import { TAB_ID } from '../utils/constants';
 import { ASSISTANT_API } from '../../common/constants/llm';
 import { findLastIndex } from '../utils';
@@ -127,6 +128,20 @@ export const useChatActions = (): AssistantActions => {
         switch (type) {
           case 'visualization':
             window.open(`./visualize#/edit/${id}`, '_blank');
+            break;
+        }
+        break;
+      }
+
+      case 'create_monitor_in_dashboard': {
+        const type = message.contentType;
+        // Converting a complex nested JSON to query parameters of URL requires some other efforts (like introducing a new dependency lib or implementing a helper function)
+        // So the GetCreateMonitorParametersTool only provides a flat JSON for query_level_monitor, the other types of monitors are not supported yet.
+        const content = Qs.stringify(message.content);
+        switch (type) {
+          case 'create_monitor_grid':
+            // window.history.pushState({}, '', `./alerting#/create-monitor/${content}`)
+            window.location.replace(`./alerting#/create-monitor?${content}`);
             break;
         }
         break;

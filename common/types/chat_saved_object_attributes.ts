@@ -64,7 +64,9 @@ interface ISuggestedActionBase {
 }
 export type ISuggestedAction = ISuggestedActionBase &
   (
-    | { actionType: 'send_as_input' | 'copy' | 'view_in_dashboards' }
+    | {
+        actionType: 'send_as_input' | 'copy' | 'view_in_dashboards' | 'create_monitor_in_dashboard';
+      }
     | {
         actionType: 'view_ppl_visualization';
         metadata: { query: string; question: string };

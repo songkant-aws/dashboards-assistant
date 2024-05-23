@@ -44,6 +44,27 @@ type MessageBubbleProps = {
     }
 );
 
+// Example new button
+// {props.message.suggestedActions ? props.message.suggestedActions.filter(a => a.actionType == 'create_monitor_in_dashboard').length > 0 && (
+//   <EuiFlexItem grow={false}>
+//     <EuiButtonIcon
+//       aria-label="Create a monitor"
+//       onClick={() => {
+//         const message = props.message as IOutput;
+//
+//         const createMonitorAction: ISuggestedAction = {
+//           actionType: 'create_monitor_in_dashboard',
+//           message: 'Create a monitor',
+//         };
+//         executeAction(createMonitorAction, message);
+//       }}
+//       title="Create a monitor"
+//       color="text"
+//       iconType="iInCircle"
+//     />
+//   </EuiFlexItem>
+// ) : null}
+
 export const MessageBubble: React.FC<MessageBubbleProps> = React.memo((props) => {
   const { feedbackResult, sendFeedback } = useFeedback(
     'interaction' in props ? props.interaction : null

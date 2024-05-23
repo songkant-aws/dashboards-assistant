@@ -16,6 +16,7 @@ import { setupRoutes } from './routes/index';
 import { AssistantPluginSetup, AssistantPluginStart, MessageParser } from './types';
 import { BasicInputOutputParser } from './parsers/basic_input_output_parser';
 import { VisualizationCardParser } from './parsers/visualization_card_parser';
+import { CreateMonitorParsers } from './parsers/create_monitor_parser';
 
 export class AssistantPlugin implements Plugin<AssistantPluginSetup, AssistantPluginStart> {
   private readonly logger: Logger;
@@ -63,6 +64,7 @@ export class AssistantPlugin implements Plugin<AssistantPluginSetup, AssistantPl
 
     registerMessageParser(BasicInputOutputParser);
     registerMessageParser(VisualizationCardParser);
+    registerMessageParser(CreateMonitorParsers);
 
     return {
       registerMessageParser,
