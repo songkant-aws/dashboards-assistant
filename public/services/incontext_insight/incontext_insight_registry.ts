@@ -31,7 +31,8 @@ export class IncontextInsightRegistry extends EventEmitter {
 
   public async open(item: IncontextInsight, suggestion: string) {
     // TODO: passing incontextInsight for future usage
-    const contextContent = item.contextProvider ? await item.contextProvider() : '';
+    const contextObj = item.contextProvider ? await item.contextProvider() : undefined;
+    const contextContent = contextObj ? contextObj.context : '';
     const datasourceId = item.datasourceId;
     this.emit('onSuggestion', {
       suggestion,
@@ -41,7 +42,8 @@ export class IncontextInsightRegistry extends EventEmitter {
   }
 
   public async continueInChat(item: IncontextInsight, conversationId: string) {
-    const contextContent = item.contextProvider ? await item.contextProvider() : '';
+    const contextObj = item.contextProvider ? await item.contextProvider() : undefined;
+    const contextContent = contextObj ? contextObj.context : '';
     const datasourceId = item.datasourceId;
     this.emit('onChatContinuation', {
       conversationId,

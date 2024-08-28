@@ -60,6 +60,13 @@ export interface AssistantSetup {
    * Returns true if contextual assistant is enabled.
    */
   nextEnabled: () => boolean;
+  getFeatureStatus: () => {
+    chat: boolean;
+    next: boolean;
+    text2viz: boolean;
+    alertInsight: boolean;
+    smartAnomalyDetector: boolean;
+  };
   assistantActions: Omit<AssistantActions, 'executeAction'>;
   registerIncontextInsight: IncontextInsightRegistry['register'];
   renderIncontextInsight: (component: React.ReactNode) => React.ReactNode;
@@ -90,7 +97,7 @@ export interface IncontextInsight {
   summary?: string;
   suggestions?: string[];
   interactionId?: string;
-  contextProvider?: () => Promise<string>;
+  contextProvider?: () => Promise<Record<string, unknown>>;
   datasourceId?: string;
 }
 

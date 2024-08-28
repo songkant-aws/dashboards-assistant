@@ -41,9 +41,21 @@ export const GeneratePopoverBody: React.FC<{
     setSummary('');
     setConversationId('');
     const summarize = async () => {
-      const contextContent = incontextInsight.contextProvider
-        ? await incontextInsight.contextProvider()
-        : '';
+      let contextObj;
+      try {
+        contextObj = incontextInsight.contextProvider
+          ? await incontextInsight.contextProvider()
+          : undefined;
+      } catch (error) {
+        toasts.addDanger(
+          i18n.translate('assistantDashboards.incontextInsight.generateSummaryError', {
+            defaultMessage: 'Generate summary error as no context is fetched',
+          })
+        );
+        setIsLoading(false);
+        return;
+      }
+
       let incontextInsightType: string;
       const endIndex = incontextInsight.key.indexOf('_', 0);
       if (endIndex !== -1) {
@@ -60,7 +72,10 @@ export const GeneratePopoverBody: React.FC<{
               type: 'input',
               content: summarizationQuestion,
               contentType: 'text',
-              context: { content: contextContent, dataSourceId: incontextInsight.datasourceId },
+              context: {
+                content: contextObj ? contextObj.context : '',
+                dataSourceId: incontextInsight.datasourceId,
+              },
               promptPrefix: getAssistantRole(incontextInsightType),
             },
           }),

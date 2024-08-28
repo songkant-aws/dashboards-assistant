@@ -17,6 +17,15 @@ export const configSchema = schema.object({
   next: schema.object({
     enabled: schema.boolean({ defaultValue: false }),
   }),
+  text2viz: schema.object({
+    enabled: schema.boolean({ defaultValue: false }),
+  }),
+  alertInsight: schema.object({
+    enabled: schema.boolean({ defaultValue: false }),
+  }),
+  smartAnomalyDetector: schema.object({
+    enabled: schema.boolean({ defaultValue: false }),
+  }),
 });
 
 export type ConfigSchema = TypeOf<typeof configSchema>;
