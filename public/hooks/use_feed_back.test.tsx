@@ -162,8 +162,7 @@ describe('useFeedback hook', () => {
     );
     expect(coreHookExports.useCore().services.usageCollection.reportUiCounter).not.toHaveBeenCalled();
   });
-});
-    } as IOutput;
+
     const mockMessages = [mockOutputMessage];
     jest.spyOn(chatStateHookExports, 'useChatState').mockReturnValue({
       chatState: { messages: mockMessages, interactions: [], llmResponding: false },
