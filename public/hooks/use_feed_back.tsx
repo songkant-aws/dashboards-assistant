@@ -41,6 +41,9 @@ export const useFeedback = (interaction?: Interaction | null) => {
         query: core.services.dataSource.getDataSourceQuery(),
       });
       setFeedbackResult(correct);
+
+      // Emit click event
+      core.services.usageCollection?.reportUiCounter('assistant', 'click', correct ? 'thumb_up' : 'thumb_down');
     } catch (error) {
       console.log('send feedback error');
     }

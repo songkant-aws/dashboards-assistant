@@ -31,6 +31,9 @@ describe('useFeedback hook', () => {
       services: {
         http: httpMock,
         dataSource: dataSourceMock,
+        usageCollection: {
+          reportUiCounter: jest.fn(),
+        },
       },
     });
     jest.spyOn(chatContextHookExports, 'useChatContext').mockReturnValue(chatContextMock);
@@ -88,6 +91,11 @@ describe('useFeedback hook', () => {
       }
     );
     expect(result.current.feedbackResult).toBe(true);
+    expect(coreHookExports.useCore().services.usageCollection.reportUiCounter).toHaveBeenCalledWith(
+      'assistant',
+      'click',
+      'thumb_up'
+    );
   });
 
   it('should not update feedback state if API fail', async () => {
@@ -123,12 +131,38 @@ describe('useFeedback hook', () => {
       }
     );
     expect(result.current.feedbackResult).toBe(undefined);
+    expect(coreHookExports.useCore().services.usageCollection.reportUiCounter).not.toHaveBeenCalled();
   });
 
   it('should not call API to feedback if there is no input message before passed output message', async () => {
     const mockOutputMessage = {
       type: 'output',
       interactionId: 'interactionId',
+    } as IOutput;
+    const mockMessages = [mockOutputMessage];
+    jest.spyOn(chatStateHookExports, 'useChatState').mockReturnValue({
+      chatState: { messages: mockMessages, interactions: [], llmResponding: false },
+      chatStateDispatch: chatStateDispatchMock,
+    });
+    const { result } = renderHook(() => useFeedback());
+    expect(result.current.feedbackResult).toBe(undefined);
+
+    const sendFeedback = result.current.sendFeedback;
+    await act(async () => {
+      await sendFeedback(mockOutputMessage, true);
+    });
+
+    expect(httpMock.put).not.toHaveBeenCalledWith(
+      `${ASSISTANT_API.FEEDBACK}/${mockOutputMessage.interactionId}`,
+      {
+        body: JSON.stringify({
+          satisfaction: true,
+        }),
+      }
+    );
+    expect(coreHookExports.useCore().services.usageCollection.reportUiCounter).not.toHaveBeenCalled();
+  });
+});
     } as IOutput;
     const mockMessages = [mockOutputMessage];
     jest.spyOn(chatStateHookExports, 'useChatState').mockReturnValue({
